@@ -11,6 +11,8 @@ const DeviceInfo = () => {
     platform: 'Not available',
     language: 'Not available',
     timezone: 'Not available',
+    cpuCores: 'Not available',
+    fingerprint: 'Not available',
   };
   
   return (
@@ -55,7 +57,7 @@ const DeviceInfo = () => {
             <div className="text-muted-foreground">{deviceData.cpuCores}</div>
           </div>
           <div className="pt-2 text-xs text-muted-foreground border-t">
-            Fingerprint ID: {deviceData.fingerprint?.substring(0, 12)}...
+            Fingerprint ID: {deviceData.fingerprint ? `${deviceData.fingerprint.substring(0, 12)}...` : 'Not available'}
           </div>
         </div>
       </CardContent>

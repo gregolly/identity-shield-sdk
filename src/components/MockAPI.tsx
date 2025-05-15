@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 const MockAPI = () => {
   useEffect(() => {
     // Create a mock identity verification endpoint for our demo
-    const mockVerifyEndpoint = async (request: Request) => {
+    const mockVerifyEndpoint = async (request: any) => {
       // Parse the request body
       const data = await request.json();
       
@@ -73,7 +73,8 @@ const MockAPI = () => {
     window.fetch = async (input, init) => {
       if (input === '/api/identity/verify') {
         try {
-          const response = await mockVerifyEndpoint(init?.body as Request);
+          // Convert body to any first to avoid type errors
+          const response = await mockVerifyEndpoint(init?.body as any);
           return {
             ok: true,
             status: 200,

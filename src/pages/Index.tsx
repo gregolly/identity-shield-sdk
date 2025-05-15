@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -8,11 +7,19 @@ import LoginDemo from '@/components/LoginDemo';
 import BackendDemo from '@/components/BackendDemo';
 import SDKDocumentation from '@/components/SDKDocumentation';
 import MockAPI from '@/components/MockAPI';
+import { NexFraudData } from '@/components/NexFraudSDK/sdk';
 
+// Extend the Window interface using the proper type from the SDK file
 declare global {
   interface Window {
-    nexFraudData: any;
-    nexFraudEventListeners: any;
+    nexFraudData: NexFraudData;
+    nexFraudEventListeners: {
+      mousemove: (e: MouseEvent) => void;
+      click: (e: MouseEvent) => void;
+      keydown: (e: KeyboardEvent) => void;
+      scroll: (e: Event) => void;
+      visibilitychange: (e: Event) => void;
+    };
   }
 }
 

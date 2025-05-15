@@ -100,9 +100,12 @@ const getWebGLInfo = (): string => {
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (!gl) return 'webgl-unsupported';
     
-    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    // Fix: Cast to WebGLRenderingContext to access WebGL-specific methods
+    const webGLContext = gl as WebGLRenderingContext;
+    
+    const info = webGLContext.getExtension('WEBGL_debug_renderer_info');
     if (info) {
-      return gl.getParameter(info.UNMASKED_RENDERER_WEBGL).toString().substring(0, 100);
+      return webGLContext.getParameter(info.UNMASKED_RENDERER_WEBGL).toString().substring(0, 100);
     }
     return 'webgl-limited-info';
   } catch (e) {
