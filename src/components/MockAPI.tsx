@@ -5,10 +5,7 @@ import React, { useEffect } from 'react';
 const MockAPI = () => {
   useEffect(() => {
     // Create a mock identity verification endpoint for our demo
-    const mockVerifyEndpoint = async (request: any) => {
-      // Parse the request body
-      const data = await request.json();
-      
+    const mockVerifyEndpoint = (data) => {
       // Calculate a risk score based on the data received
       // This is a simplified version of what a real backend would do
       let score = 100; // Start with a perfect score
@@ -57,9 +54,6 @@ const MockAPI = () => {
         message = 'High risk activity detected. Access should be blocked.';
       }
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
       return {
         status,
         score,
@@ -73,8 +67,15 @@ const MockAPI = () => {
     window.fetch = async (input, init) => {
       if (input === '/api/identity/verify') {
         try {
-          // Convert body to any first to avoid type errors
-          const response = await mockVerifyEndpoint(init?.body as any);
+          // Parse the body directly as JSON
+          const data = init?.body ? JSON.parse(init.body.toString()) : {};
+          
+          // Simulate network delay
+          await new Promise(resolve => setTimeout(resolve, 800));
+          
+          // Process the verification
+          const response = mockVerifyEndpoint(data);
+          
           return {
             ok: true,
             status: 200,

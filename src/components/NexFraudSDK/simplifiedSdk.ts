@@ -130,42 +130,22 @@ export const verifyIdentity = async (): Promise<{
   score: number;
   message: string;
 }> => {
-  // We'll simulate an API call and risk calculation
-  const data = window.simplifiedNexFraud?.data;
-  
-  // Simple risk scoring algorithm for demo purposes
-  let score = 100; // Start with perfect score
-  
-  // Check behavior metrics
-  if (data?.behavior.mouseMovements < 5) score -= 30;
-  if (data?.behavior.clicks < 1) score -= 20;
-  if (data?.behavior.timeOnPage < 5) score -= 15;
-  
-  // Add some randomness for demo purposes
-  const randomFactor = Math.floor(Math.random() * 20) - 5;
-  score = Math.max(0, Math.min(100, score + randomFactor));
-  
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  // Return result based on score
-  if (score >= 70) {
-    return {
-      status: 'allow',
-      score,
-      message: 'User verification successful',
-    };
-  } else if (score >= 40) {
-    return {
-      status: 'review',
-      score,
-      message: 'Additional verification recommended',
-    };
-  } else {
-    return {
-      status: 'deny',
-      score,
-      message: 'High risk activity detected',
-    };
+  try {
+    const response = await fetch('/api/identity/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(window.simplifiedNexFraud?.data || {}),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Verification request failed');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Verification error:', error);
+    throw error;
   }
 };
